@@ -23,6 +23,27 @@ const sampleRecipes = [
         ingredients: "lettuce, croutons, parmesan, anchovies",
         cookTime: "10 mins",
         difficulty: "Easy"
+    },
+    {
+        id: 4,
+        title: "Beef Stir Fry",
+        ingredients: "beef, vegetables, soy sauce, garlic, ginger",
+        cookTime: "20 mins",
+        difficulty: "Easy"
+    },
+    {
+        id: 5,
+        title: "Mushroom Risotto",
+        ingredients: "arborio rice, mushrooms, stock, wine, parmesan",
+        cookTime: "35 mins",
+        difficulty: "Medium"
+    },
+    {
+        id: 6,
+        title: "Fish Tacos",
+        ingredients: "white fish, tortillas, cabbage, lime, cilantro",
+        cookTime: "25 mins",
+        difficulty: "Easy"
     }
 ];
 
