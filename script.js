@@ -1,6 +1,11 @@
 const searchBtn = document.getElementById('search-btn');
 const searchInput = document.getElementById('search-input');
 const recipesContainer = document.getElementById('recipes-container');
+const allRecipesBtn = document.getElementById('all-recipes-btn');
+const favoritesBtn = document.getElementById('favorites-btn');
+
+let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
+let currentFilter = 'all';
 
 const sampleRecipes = [
     {
@@ -51,6 +56,7 @@ function displayRecipes(recipes) {
     recipesContainer.innerHTML = '';
     
     recipes.forEach(recipe => {
+        const isFavorite = favorites.includes(recipe.id);
         const recipeCard = document.createElement('div');
         recipeCard.className = 'recipe-card';
         recipeCard.innerHTML = `
@@ -58,6 +64,10 @@ function displayRecipes(recipes) {
             <p><strong>Ingredients:</strong> ${recipe.ingredients}</p>
             <p><strong>Cook Time:</strong> ${recipe.cookTime}</p>
             <p><strong>Difficulty:</strong> ${recipe.difficulty}</p>
+            <button class="favorite-btn ${isFavorite ? 'favorited' : ''}" 
+                    onclick="toggleFavorite(${recipe.id})">
+                ${isFavorite ? '❤️' : '🤍'} ${isFavorite ? 'Favorited' : 'Add to Favorites'}
+            </button>
         `;
         recipesContainer.appendChild(recipeCard);
     });
@@ -65,11 +75,46 @@ function displayRecipes(recipes) {
 
 function searchRecipes() {
     const query = searchInput.value.toLowerCase();
-    const filteredRecipes = sampleRecipes.filter(recipe => 
+    let filteredRecipes = sampleRecipes.filter(recipe => 
         recipe.title.toLowerCase().includes(query) ||
         recipe.ingredients.toLowerCase().includes(query)
     );
+    
+    if (currentFilter === 'favorites') {
+        filteredRecipes = filteredRecipes.filter(recipe => favorites.includes(recipe.id));
+    }
+    
     displayRecipes(filteredRecipes);
+}
+
+function toggleFavorite(recipeId) {
+    if (favorites.includes(recipeId)) {
+        favorites = favorites.filter(id => id !== recipeId);
+    } else {
+        favorites.push(recipeId);
+    }
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+    
+    if (currentFilter === 'all') {
+        searchRecipes();
+    } else {
+        showFavorites();
+    }
+}
+
+function showAllRecipes() {
+    currentFilter = 'all';
+    allRecipesBtn.classList.add('active');
+    favoritesBtn.classList.remove('active');
+    searchRecipes();
+}
+
+function showFavorites() {
+    currentFilter = 'favorites';
+    favoritesBtn.classList.add('active');
+    allRecipesBtn.classList.remove('active');
+    const favoriteRecipes = sampleRecipes.filter(recipe => favorites.includes(recipe.id));
+    displayRecipes(favoriteRecipes);
 }
 
 searchBtn.addEventListener('click', searchRecipes);
@@ -78,5 +123,8 @@ searchInput.addEventListener('keypress', (e) => {
         searchRecipes();
     }
 });
+
+allRecipesBtn.addEventListener('click', showAllRecipes);
+favoritesBtn.addEventListener('click', showFavorites);
 
 displayRecipes(sampleRecipes);
