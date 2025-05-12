@@ -3,9 +3,13 @@ const searchInput = document.getElementById('search-input');
 const recipesContainer = document.getElementById('recipes-container');
 const allRecipesBtn = document.getElementById('all-recipes-btn');
 const favoritesBtn = document.getElementById('favorites-btn');
+const difficultySelect = document.getElementById('difficulty-select');
+const sortSelect = document.getElementById('sort-select');
 
 let favorites = JSON.parse(localStorage.getItem('favorites')) || [];
 let currentFilter = 'all';
+let currentDifficulty = 'all';
+let currentSort = 'name';
 
 const sampleRecipes = [
     {
@@ -73,7 +77,7 @@ function displayRecipes(recipes) {
     });
 }
 
-function searchRecipes() {
+function getFilteredAndSortedRecipes() {
     const query = searchInput.value.toLowerCase();
     let filteredRecipes = sampleRecipes.filter(recipe => 
         recipe.title.toLowerCase().includes(query) ||
@@ -84,6 +88,32 @@ function searchRecipes() {
         filteredRecipes = filteredRecipes.filter(recipe => favorites.includes(recipe.id));
     }
     
+    if (currentDifficulty !== 'all') {
+        filteredRecipes = filteredRecipes.filter(recipe => recipe.difficulty === currentDifficulty);
+    }
+    
+    // Sort recipes
+    filteredRecipes.sort((a, b) => {
+        switch(currentSort) {
+            case 'name':
+                return a.title.localeCompare(b.title);
+            case 'time':
+                const timeA = parseInt(a.cookTime);
+                const timeB = parseInt(b.cookTime);
+                return timeA - timeB;
+            case 'difficulty':
+                const diffOrder = { 'Easy': 1, 'Medium': 2, 'Hard': 3 };
+                return diffOrder[a.difficulty] - diffOrder[b.difficulty];
+            default:
+                return 0;
+        }
+    });
+    
+    return filteredRecipes;
+}
+
+function searchRecipes() {
+    const filteredRecipes = getFilteredAndSortedRecipes();
     displayRecipes(filteredRecipes);
 }
 
@@ -113,8 +143,7 @@ function showFavorites() {
     currentFilter = 'favorites';
     favoritesBtn.classList.add('active');
     allRecipesBtn.classList.remove('active');
-    const favoriteRecipes = sampleRecipes.filter(recipe => favorites.includes(recipe.id));
-    displayRecipes(favoriteRecipes);
+    searchRecipes();
 }
 
 searchBtn.addEventListener('click', searchRecipes);
@@ -126,5 +155,15 @@ searchInput.addEventListener('keypress', (e) => {
 
 allRecipesBtn.addEventListener('click', showAllRecipes);
 favoritesBtn.addEventListener('click', showFavorites);
+
+difficultySelect.addEventListener('change', (e) => {
+    currentDifficulty = e.target.value;
+    searchRecipes();
+});
+
+sortSelect.addEventListener('change', (e) => {
+    currentSort = e.target.value;
+    searchRecipes();
+});
 
 displayRecipes(sampleRecipes);

@@ -86,6 +86,33 @@ main {
     color: white;
 }
 
+.controls-container {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.difficulty-filter, .sort-options {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.controls-container label {
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.controls-container select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: white;
+    font-size: 14px;
+}
+
 #recipes-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));

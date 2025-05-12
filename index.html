@@ -23,6 +23,26 @@
             <button id="favorites-btn" class="filter-btn">Favorites</button>
         </div>
         
+        <div class="controls-container">
+            <div class="difficulty-filter">
+                <label for="difficulty-select">Filter by Difficulty:</label>
+                <select id="difficulty-select">
+                    <option value="all">All Difficulties</option>
+                    <option value="Easy">Easy</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Hard">Hard</option>
+                </select>
+            </div>
+            <div class="sort-options">
+                <label for="sort-select">Sort by:</label>
+                <select id="sort-select">
+                    <option value="name">Recipe Name</option>
+                    <option value="time">Cook Time</option>
+                    <option value="difficulty">Difficulty</option>
+                </select>
+            </div>
+        </div>
+        
         <div id="recipes-container">
             <!-- Recipes will be displayed here -->
         </div>
